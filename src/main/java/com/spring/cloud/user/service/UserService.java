@@ -31,12 +31,12 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUserSave(User user) throws Exception{
+    public User getUserSave(User user) throws Exception {
         User userNew = userRepository.save(user);
         return userNew;
     }
 
-    public User getUserById(Integer id) throws Exception{
+    public User getUserById(Integer id) throws Exception {
         return userRepository.findById(id).orElseThrow();
     }
 
@@ -50,34 +50,34 @@ public class UserService {
         return bikes;
     }
 
-    public Car saveCar(int userId, Car car){
+    public Car saveCar(int userId, Car car) {
         car.setUserId(userId);
         return carFeignClient.saveCar(car);
     }
 
-    public Bike saveBike(int userId, Bike bike){
+    public Bike saveBike(int userId, Bike bike) {
         bike.setUserId(userId);
         return bikeFeignClient.saveBike(bike);
     }
 
-    public Map<String, Object> getUserAndVehicles(int userId){
+    public Map<String, Object> getUserAndVehicles(int userId) {
         Map<String, Object> result = new HashMap<>();
         User user = userRepository.findById(userId).orElse(null);
-        if (user == null){
+        if (user == null) {
             result.put("Message", "user does not exist");
             return result;
         }
         result.put("User", user);
         List<Car> cars = carFeignClient.getCars(userId);
-        if(cars.isEmpty()){
+        if (cars.isEmpty()) {
             result.put("Cars", "User does not have a car");
-        }else{
+        } else {
             result.put("Cars", cars);
         }
         List<Bike> bikes = bikeFeignClient.getBikes(userId);
         if (bikes.isEmpty()) {
             result.put("Bikes", "User does not a bike");
-        }else{
+        } else {
             result.put("Bikes", bikes);
         }
         return result;
